@@ -6,14 +6,20 @@
 - typescript 4.8
 - nx 15.2
 
+- react
 
 ## How to run:
+
+in the root of the project run:
 
 - pnpm use --global 18.12.1
 
 - pnpm dlx install
 - pnpm nx build directory-handler-api
 - pnpm nx serve directory-handler-api
+
+// in other terminal run
+- pnpm nx serve client
 
 There is an example folder for testing purposes at:
     `apps/directory-handler-api/src/example-folder`

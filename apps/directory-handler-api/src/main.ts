@@ -1,9 +1,12 @@
 import * as express from 'express';
 import { indexRouter } from './routers';
 import { dirsRouter } from './routers/dirs';
+import * as cors from 'cors';
+
 
 const app = express();
 
+app.use(cors({origin: '*'})) // not safe for production, just for dev purposes
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
