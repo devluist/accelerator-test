@@ -1,0 +1,187 @@
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./apps/directory-handler-api/src/controllers/dirExplorer.ts":
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.dirExplorer = void 0;
+const fs_1 = __webpack_require__("fs");
+const path_1 = __webpack_require__("path");
+const dirExplorer = (req, res, next) => {
+    const { dirPath } = req.body;
+    readFolderFiles(dirPath, (err, list) => {
+        if (err) {
+            res.status(500).send(err);
+        }
+        else {
+            res.send(list);
+        }
+    });
+};
+exports.dirExplorer = dirExplorer;
+function readFolderFiles(folder, done) {
+    let results = [];
+    (0, fs_1.readdir)(folder, (err, files) => {
+        if (err) {
+            return done(err);
+        }
+        let pendingFiles = files.length;
+        // if the folder is empty
+        if (!pendingFiles) {
+            return done(null, results);
+        }
+        files.forEach(file => {
+            file = (0, path_1.resolve)(folder + file);
+            (0, fs_1.stat)(file, (err, fileData) => {
+                if (err) {
+                    return done(err);
+                }
+                // Here we handle the case of subfolders
+                if (fileData && fileData.isDirectory()) {
+                    readFolderFiles(file, (err, res) => {
+                        results = results.concat(res);
+                    });
+                }
+                else {
+                    let size;
+                    if (fileData.size > 500) {
+                        size = (fileData.size / 1024 / 1024) + " Mb";
+                    }
+                    else {
+                        size = (fileData.size / 1024) + " Kb";
+                    }
+                    // let's return the most usefull data
+                    results.push({
+                        file,
+                        size,
+                        atime: fileData.atime,
+                        mtime: fileData.mtime,
+                        ctime: fileData.ctime,
+                        uid: fileData.uid,
+                        gid: fileData.gid
+                    });
+                    // if no more files pending to be read, return the list of processed files
+                    if (!--pendingFiles) {
+                        done(null, results);
+                    }
+                }
+            });
+        });
+    });
+}
+
+
+/***/ }),
+
+/***/ "./apps/directory-handler-api/src/routers/dirs.ts":
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.dirsRouter = void 0;
+const express = __webpack_require__("express");
+const dirExplorer_1 = __webpack_require__("./apps/directory-handler-api/src/controllers/dirExplorer.ts");
+const router = express.Router();
+router.post('/', (req, res, next) => (0, dirExplorer_1.dirExplorer)(req, res, next));
+exports.dirsRouter = router;
+
+
+/***/ }),
+
+/***/ "./apps/directory-handler-api/src/routers/index.ts":
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.indexRouter = void 0;
+const express = __webpack_require__("express");
+const router = express.Router();
+/* GET home page. */
+router.get('/', function (req, res, next) {
+    res.send('TODO: POR REVISAR');
+});
+exports.indexRouter = router;
+
+
+/***/ }),
+
+/***/ "express":
+/***/ ((module) => {
+
+module.exports = require("express");
+
+/***/ }),
+
+/***/ "fs":
+/***/ ((module) => {
+
+module.exports = require("fs");
+
+/***/ }),
+
+/***/ "path":
+/***/ ((module) => {
+
+module.exports = require("path");
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const express = __webpack_require__("express");
+const routers_1 = __webpack_require__("./apps/directory-handler-api/src/routers/index.ts");
+const dirs_1 = __webpack_require__("./apps/directory-handler-api/src/routers/dirs.ts");
+const app = express();
+// app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use('/api', routers_1.indexRouter);
+app.use('/api/path', dirs_1.dirsRouter);
+const port = process.env.port || 3333;
+const server = app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}/api`);
+});
+server.on('error', console.error);
+
+})();
+
+var __webpack_export_target__ = exports;
+for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_exports__[i];
+if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
+/******/ })()
+;
+//# sourceMappingURL=main.js.map
