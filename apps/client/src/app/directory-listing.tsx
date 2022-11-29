@@ -17,7 +17,7 @@ export function DirectoryListing() {
       body: JSON.stringify({"dirPath": "/home/devlt/dev/skills-test/js/accelerator-app/apps/directory-handler-api/src/example-folder/"})
     })
     .then( res => res.json())
-    .then( res => setDirList(JSON.parse(res.data)))
+    .then( res => setDirList(res.data))
     .catch(err => console.error(err));
   }
 
@@ -30,6 +30,7 @@ export function DirectoryListing() {
     console.log(file["file"])
     return <div key={idx} style={{color: 'white', padding: '20px'}}>
       <b>File:</b> {file["file"]} <br />
+      <b>Size (bytes):</b> {file["size"]} <br />
       <b>Ctime:</b> {file["ctime"]} <br />
       <b>Mtime:</b> {file["mtime"]} <br />
       <b>Atime:</b> {file["atime"]} <br />
