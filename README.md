@@ -35,7 +35,8 @@ There is an example folder for testing purposes at:
         }
     ```
 
-- CLIENT localhost:4200
+- CLIENT // you need to change the PATH TO THE DIRECTORY at: `apps/client/src/app/directory-listing.tsx`
+  - CLIENT ENDPOINT localhost:4200
 
 
 > Also I wish to point to another project, older but with more time to solve a bigger problem and developed with good practices in mind
