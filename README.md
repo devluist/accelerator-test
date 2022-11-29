@@ -15,7 +15,7 @@
 - pnpm nx build directory-handler-api
 - pnpm nx serve directory-handler-api
 
-There is an example folder at:
+There is an example folder for testing purposes at:
     `apps/directory-handler-api/src/example-folder`
 
 
