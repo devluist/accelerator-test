@@ -15,6 +15,20 @@
 - pnpm nx build directory-handler-api
 - pnpm nx serve directory-handler-api
 
+There is an example folder at:
+    `apps/directory-handler-api/src/example-folder`
+
+
+## Endpoint (to check the REST API):
+
+- POST localhost:3333/api/fetch-folder
+    - append the JSON body:
+    ```
+        {
+            "dirPath": "YOUR-PATH-FOR-THIS-PROJECT/accelerator-app/apps/directory-handler-api/src/example-folder/"
+        }
+    ```
+
 
 > Also I wish to point to another project, older but with more time to solve a bigger problem and developed with good practices in mind
 
